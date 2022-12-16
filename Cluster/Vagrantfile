@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+cluster = [
+    {
+        :box => 'generic/alma9',
+        :cpus => 4,
+        :mem => 4096,
+        :maxmem => 4096,
+        :name=> 'master'
+    },
+    { 
+        :box => 'generic/alma9',
+        :cpus => 2,
+        :mem => 2048,
+        :maxmem => 4096,
+        :name=> 'node1'
+    },
+    # {
+    #     :box => 'generic/alma9',
+    #     :cpus => 2,
+    #     :mem => 2048,
+    #     :maxmem => 4096,
+    #     :name=> 'node2'
+    # }
+]
+
+Vagrant.configure("2") do |config|
+
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+    config.vm.network "public_network", bridge: "Default Switch"
+    
+    cluster.each do |node|
+        config.vm.define node[:name] do |config|
+
+            config.vm.box = node[:box]
+            config.vm.hostname = node[:name]
+
+            config.vm.provider :hyperv do |h, override|
+                h.maxmemory = node[:maxmem]
+                h.memory = node[:mem]
+                h.cpus = node[:cpus]
+                h.vmname = node[:name]
+            end
+        end
+    end
+    # Add SSH key to vagrant & root
+    config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("C:\\Users\\Shiro\\.ssh\\vagrant.pub").first.strip
+        s.inline = <<-SHELL
+            mkdir ~/.ssh
+            chmod 700 ~/.ssh
+            touch ~/.ssh/authorized_keys
+            chmod 600 ~/.ssh/authorized_keys
+            echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+            echo #{ssh_pub_key} >> ~/.ssh/authorized_keys
+            SHELL
+    end
+end
