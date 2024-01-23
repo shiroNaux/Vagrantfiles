@@ -1,0 +1,41 @@
+# Guide
+
+## Requirements
+
+### Vagrant VMWareESXi plugin
+
+### VMWare ovftool
+
+### SSH access to ESXi
+
+## Usage
+
+1. Modify Vagrantfile as you need
+2. Set environment variable
+    - On Windows
+
+        ```powershell
+         $env:ESXI_PASS = 'PassWord!@#'
+        ```
+
+    - On Linux
+
+        ```bash
+        export ESXI_PASS=PassWord!@#
+        ```
+
+3. Up the virtual machine
+
+    ```bash
+    vagrant up
+    ```
+
+## Note
+
+Currently, there are some config that I don't know how to set
+
+- Default user instead of vagrant
+- Provisioning disk size
+- Set static IP for main Virtual network
+
+You can head up to <https://github.com/josenk/vagrant-vmware-esxi> for more information
