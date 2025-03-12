@@ -69,9 +69,10 @@ Vagrant.configure("2") do |config|
     #    so, you will need a DHCP server for each virtual network.  To set a
     #    static IP for interface 2, 3 or 4. see above 'config.vm.network'.
     esxi.esxi_virtual_network = ['VM Network']
-    esxi.guest_memsize = '32768'
-    esxi.guest_numvcpus = '16'
-    esxi.esxi_disk_store = 'datastore02'
+    esxi.guest_memsize = '16384'
+    esxi.guest_numvcpus = '8'
+    esxi.esxi_disk_store = 'HDD'
+    esxi.guest_disk_type = 'thick'
 
     esxi.guest_name = 'Versatica-xl1'
 
